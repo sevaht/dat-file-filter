@@ -92,6 +92,72 @@ def test_no_english_kept_entry_is_yellow(
     assert "+ Cool Game (USA)" in out
 
 
+def test_keep_forces_an_otherwise_dropped_entry(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    dat = _write(tmp_path)
+    code = main(
+        [
+            "--color",
+            "never",
+            "--no-clone-lists",
+            "--releases-only",
+            "--best-english",
+            "--has-english",
+            "--keep",
+            "Cool Game (Japan) (Ja)",
+            "--list",
+            dat,
+        ]
+    )
+    assert code == 0
+    # Without --keep this no-English copy is dropped; --keep forces it back,
+    # flagged * to show it survived specifically because it was kept.
+    assert "* Cool Game (Japan) (Ja)" in capsys.readouterr().out
+
+
+def test_keep_list_file_overrides_releases_only(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    dat = _write(tmp_path)
+    keep_file = tmp_path / "keep.txt"
+    keep_file.write_text(
+        "# keepers\n\nCool Game (Demo) (USA)\n", encoding="utf-8"
+    )
+    code = main(
+        [
+            "--color",
+            "never",
+            "--no-clone-lists",
+            "--releases-only",
+            "--best-english",
+            "--keep-list",
+            str(keep_file),
+            "--list",
+            dat,
+        ]
+    )
+    assert code == 0
+    # The demo is normally dropped by --releases-only; a keep overrides that
+    # and marks it * (force-kept).
+    assert "* Cool Game (Demo) (USA)" in capsys.readouterr().out
+
+
+def test_unmatched_keep_is_an_error(tmp_path: Path) -> None:
+    with pytest.raises(SystemExit):
+        main(
+            [
+                "--color",
+                "never",
+                "--no-clone-lists",
+                "--keep",
+                "Does Not Exist (USA)",
+                "--list",
+                _write(tmp_path),
+            ]
+        )
+
+
 def test_default_output_is_tree(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:

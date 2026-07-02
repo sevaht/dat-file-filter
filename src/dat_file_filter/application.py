@@ -3,7 +3,7 @@
 One command: selection flags decide which entries are *kept*; output flags
 decide what to emit (a grouped tree, a flat list, a written dat, or surveys of
 the data). Trees and lists mark each entry ``+`` (kept, English), ``~`` (kept,
-no English), or ``-`` (removed).
+no English), ``*`` (force-kept via ``--keep``), or ``-`` (removed).
 """
 
 from __future__ import annotations
@@ -30,7 +30,7 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-_STYLE_BY_MARK = {"+": "green", "~": "yellow", "-": "red"}
+_STYLE_BY_MARK = {"+": "green", "~": "yellow", "-": "red", "*": "cyan"}
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -68,6 +68,23 @@ def _build_parser() -> argparse.ArgumentParser:
         help=(
             "Keep one version per variant: the best English, or the original"
             " if none (unless --has-english drops it)."
+        ),
+    )
+    selection.add_argument(
+        "--keep",
+        action="append",
+        metavar="NAME",
+        help=(
+            "Always keep the entry with this exact <game name>, overriding"
+            " every other selection filter. Repeatable."
+        ),
+    )
+    selection.add_argument(
+        "--keep-list",
+        metavar="FILE",
+        help=(
+            "File of exact <game name>s to always keep, one per line (blank"
+            " lines and #-comments ignored); like --keep for each."
         ),
     )
 
@@ -187,6 +204,35 @@ def _resolve_title_groups(
     return groups
 
 
+def _resolve_keep_stems(
+    args: argparse.Namespace, datfile: DatFile, parser: argparse.ArgumentParser
+) -> set[str]:
+    """Exact ``<game name>``s to force-keep.
+
+    Gathers names from ``--keep`` and ``--keep-list`` and requires every one to
+    be present in the dat: an unmatched name is treated as an input error (a
+    typo, or the wrong dat) and aborts, rather than silently keeping nothing.
+    """
+    names: list[str] = list(args.keep or [])
+    if args.keep_list:
+        try:
+            text = Path(args.keep_list).read_text(encoding="utf-8")
+        except OSError as error:
+            parser.error(
+                f"--keep-list: cannot read {args.keep_list!r}: {error}"
+            )
+        for line in text.splitlines():
+            stripped = line.strip()
+            if stripped and not stripped.startswith("#"):
+                names.append(stripped)
+    present = datfile.entries
+    missing = sorted(name for name in set(names) if name not in present)
+    if missing:
+        listed = ", ".join(repr(name) for name in missing)
+        parser.error(f"--keep: no entry in the dat named {listed}")
+    return set(names)
+
+
 def _select_stems(
     args: argparse.Namespace,
     datfile: DatFile,
@@ -218,7 +264,9 @@ def _select_stems(
     return stems
 
 
-def _mark(metadata: Metadata, kept: set[str]) -> str:
+def _mark(metadata: Metadata, kept: set[str], keep_stems: set[str]) -> str:
+    if metadata.stem in keep_stems:
+        return "*"  # force-kept via --keep, regardless of the other filters
     if metadata.stem not in kept:
         return "-"
     return "+" if _has_english(metadata) else "~"
@@ -238,20 +286,27 @@ def _print_summary(datfile: DatFile, kept: set[str]) -> None:
     print(f"{len(kept)} kept, {removed} removed", file=sys.stderr)
 
 
-def _print_list(datfile: DatFile, kept: set[str]) -> None:
+def _print_list(
+    datfile: DatFile, kept: set[str], keep_stems: set[str]
+) -> None:
     for stem, metadata in datfile.entries.items():
-        mark = _mark(metadata, kept)
+        mark = _mark(metadata, kept, keep_stems)
         print_line(f"{mark} {stem}", style=_STYLE_BY_MARK[mark])
     _print_summary(datfile, kept)
 
 
 def _print_tree(
-    datfile: DatFile, kept: set[str], title_groups: list[set[str]] | None
+    datfile: DatFile,
+    kept: set[str],
+    keep_stems: set[str],
+    title_groups: list[set[str]] | None,
 ) -> None:
     games = datfile.build_games(title_groups=title_groups)
     for title, game in games.items():
         tree = build_marked_tree(
-            title, game.versions, lambda metadata: _mark(metadata, kept)
+            title,
+            game.versions,
+            lambda metadata: _mark(metadata, kept, keep_stems),
         )
         for line in render_marked_tree(tree):
             print_line(line.text, style=line.style)
@@ -325,7 +380,8 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     datfile = DatFile(args.dat_file)
     title_groups = _resolve_title_groups(args, datfile, parser)
-    kept = _select_stems(args, datfile, title_groups)
+    keep_stems = _resolve_keep_stems(args, datfile, parser)
+    kept = _select_stems(args, datfile, title_groups) | keep_stems
     emitted = False
     if args.output:
         count = datfile.write(Path(args.output), kept=kept, name=args.name)
@@ -340,8 +396,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         )
         emitted = True
     if args.show_list:
-        _print_list(datfile, kept)
+        _print_list(datfile, kept, keep_stems)
         emitted = True
     if args.tree or not emitted:
-        _print_tree(datfile, kept, title_groups)
+        _print_tree(datfile, kept, keep_stems, title_groups)
     return 0

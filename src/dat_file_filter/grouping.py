@@ -4,7 +4,7 @@ Metadata is grouped by an ordered list of key functions (edition, then version,
 then tags, disc, and localization); each key object renders its own label. The
 tree is printed with single-child levels collapsed onto their parent's line, so
 only real branch points create indentation. Every entry leaf carries a mark
-supplied by the caller (``+``/``~``/``-``) which drives its color.
+supplied by the caller, which drives its color.
 """
 
 from __future__ import annotations
@@ -28,7 +28,7 @@ _LEVELS: list[Callable[[Metadata], object]] = [
 ]
 
 # Mark -> rich style. Grouping/header lines carry no mark and no color.
-_STYLE_BY_MARK = {"+": "green", "~": "yellow", "-": "red"}
+_STYLE_BY_MARK = {"+": "green", "~": "yellow", "-": "red", "*": "cyan"}
 
 
 @dataclass
@@ -127,7 +127,7 @@ class _WorkLine:
 
 
 def render_marked_tree(root: GroupNode) -> list[MarkedLine]:
-    """Render a marked tree; each line gets a ``+``/``~``/``-``/space gutter.
+    """Render a marked tree; each line gets a one-char mark/space gutter.
 
     Only lines that terminate at an entry leaf carry a mark (and a color);
     grouping/header lines get a blank gutter.
