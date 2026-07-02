@@ -1,0 +1,27 @@
+{
+	"description": {
+		"name": "NEC - PC-98 series (Redump)",
+		"lastUpdated": "2026-01-02 11:07:19",
+		"minimumVersion": "2.4.8"
+	},
+	"variants": [
+		{
+			"group": "Brandish",
+			"titles": [
+				{"searchTerm": "Brandish"}
+			],
+			"supersets": [
+				{"searchTerm": "Brandish Renewal"}
+			]
+		},
+		{
+			"group": "Brandish 2 - The Planet Buster",
+			"titles": [
+				{"searchTerm": "Brandish 2 - The Planet Buster"}
+			],
+			"supersets": [
+				{"searchTerm": "Brandish 2 Renewal - The Planet Buster"}
+			]
+		}
+	]
+}

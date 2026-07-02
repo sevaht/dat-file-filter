@@ -1,0 +1,59 @@
+{
+	"description": {
+		"name": "GCE - Vectrex (No-Intro)",
+		"lastUpdated": "2026-01-02 11:07:19",
+		"minimumVersion": "2.4.8"
+	},
+	"variants": [
+		{
+			"group": "Engine Analyzer",
+			"categories": ["Applications", "Preproduction"],
+			"titles": [
+				{"searchTerm": "Engine Analyzer"}
+			]
+		},
+		{
+			"group": "Mail Plane",
+			"titles": [
+				{"searchTerm": "Mail Plane (DA1AC0DB)"},
+				{"searchTerm": "Mail Plane", "priority": 2}
+			]
+		},
+		{
+			"group": "Mine Storm II",
+			"titles": [
+				{"searchTerm": "Mine Storm"},
+				{"searchTerm": "Mine Storm II"}
+			]
+		},
+		{
+			"group": "RA+A Spectrum I+ Stress Tester",
+			"categories": ["Applications", "Preproduction"],
+			"titles": [
+				{"searchTerm": "RA+A Spectrum I+ Stress Tester"}
+			]
+		},
+		{
+			"group": "Star Trek - The Motion Picture",
+			"titles": [
+				{"searchTerm": "Star Ship (1983)"},
+				{"searchTerm": "Star Trek - The Motion Picture"},
+				{"searchTerm": "Star Ship (1982)", "priority": 2}
+			]
+		},
+		{
+			"group": "Test Cartridge",
+			"categories": ["Applications", "Preproduction"],
+			"titles": [
+				{"searchTerm": "Test Cartridge"}
+			]
+		},
+		{
+			"group": "WebWars",
+			"titles": [
+				{"searchTerm": "WebWarp"},
+				{"searchTerm": "WebWars"}
+			]
+		}
+	]
+}

@@ -36,10 +36,10 @@ flags (what to emit); it applies the selection and produces the output(s) you
 asked for.
 
 - **Game** — all the entries the tool considers the same game, grouped together.
-  Entries are grouped by their title, and additionally by the `id`/`cloneofid`
-  clone attributes when a dat provides them — most don't, so title matching does
-  most of the work; clone ids just unite variants a title can't (e.g. a Japanese
-  title with its English counterpart).
+  Entries are grouped by their title, by the `id`/`cloneofid` clone attributes
+  when a dat provides them, and by bundled **clone lists** for releases that
+  share neither (e.g. `Biohazard` (JP) and `Resident Evil` (US), or `40 Winks`
+  and its German rename `Ruff & Tumble`). See "Grouping across regional names".
 - **Variant** — a meaningfully different release: a different edition, revision,
   disc, or an unrecognized tag. Plain regional/language differences are *not*
   separate variants; they're localizations of one variant, and English
@@ -51,6 +51,31 @@ Trees and lists mark every entry:
 - `~` **yellow** — kept, but no English version exists (e.g. a Japan-only game
   kept as its own original).
 - `-` **red** — removed by the selection.
+
+## Grouping across regional names
+
+Games are often released under different names per region, and most dat files
+(all Redump disc dats, for instance) carry no clone ids to link them. The tool
+ships with **clone lists** — per-system, hand-curated groupings covering ~100
+systems. The practical payoff: with `--best-english`, the Japanese-named
+release of a game that also has an English release is dropped in favor of the
+English one, while a genuine region exclusive (in no group, no English) is
+still kept.
+
+The right clone list is chosen from the dat's system name. **A matching clone
+list is required** — if none is found the tool errors rather than silently
+grouping without one (clone-list groupings are system-specific and can't be
+merged across systems, so this is deliberate). To resolve it:
+
+- `--list-clone-lists` — print the available systems and exit.
+- `--system NAME` — use a specific system's clone list (a value from
+  `--list-clone-lists`) when the dat's name isn't detected automatically.
+- `--no-clone-lists` — proceed without one (group by title/clone id only).
+- `--clone-list FILE` — use a specific clone-list JSON file.
+- `--clone-list-dir DIR` — detect within a directory (e.g. a fresh checkout of
+  the upstream repo) instead of the bundled snapshot.
+
+Refresh the bundled snapshot with `python scripts/update_clonelists.py`.
 
 ## Selecting what to keep
 
@@ -154,3 +179,11 @@ The output's parent-clone links are made to reflect how the tool groups games:
 $ uv sync
 $ ./checks
 ```
+
+## Credits
+
+The clone lists under `src/dat_file_filter/clonelists/` are vendored from
+[Retool](https://github.com/unexpectedpanda/retool-clonelists-metadata)
+(unexpectedpanda), used under the BSD-3-Clause license — see
+`src/dat_file_filter/clonelists/LICENSE`. Retool is retired; this project keeps
+a working snapshot and can refresh it via `scripts/update_clonelists.py`.

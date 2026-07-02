@@ -1,0 +1,66 @@
+{
+	"description": {
+		"name": "Nintendo - Pokemon Mini (No-Intro)",
+		"lastUpdated": "2026-01-02 11:07:19",
+		"minimumVersion": "2.4.8"
+	},
+	"variants": [
+		{
+			"group": "Pokemon Party Mini - Rocket Start",
+			"titles": [
+				{"searchTerm": "Pokemon Party Mini - Pikachu's Rocket Start"},
+				{"searchTerm": "Pokemon Party Mini - Rocket Start"}
+			]
+		},
+		{
+			"group": "Pokemon Pinball Mini",
+			"titles": [
+				{
+					"searchTerm": "Pokemon Pinball Mini",
+					"filters": [
+						{
+							"conditions": {
+								"matchString": "GameCube Preview"
+							},
+							"results": {
+								"group": "Pokemon Pinball Mini (GameCube Preview)"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"group": "Pokemon Puzzle Collection",
+			"titles": [
+				{
+					"searchTerm": "Pokemon Puzzle Collection",
+					"filters": [
+						{
+							"conditions": {
+								"matchString": "GameCube Preview"
+							},
+							"results": {
+								"group": "Pokemon Puzzle Collection (GameCube Preview)"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"group": "Pokemon Tetris",
+			"titles": [
+				{"searchTerm": "Pokemon Shock Tetris"},
+				{"searchTerm": "Pokemon Tetris"}
+			]
+		},
+		{
+			"group": "Pokemon Zany Cards",
+			"titles": [
+				{"searchTerm": "Pokemon Anime Card Daisakusen"},
+				{"searchTerm": "Pokemon Zany Cards"}
+			]
+		}
+	]
+}

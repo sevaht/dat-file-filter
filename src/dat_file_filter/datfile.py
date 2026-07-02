@@ -174,7 +174,10 @@ class DatFile:
                 yield metadata
 
     def build_games(
-        self, *, metadata_filter: MetadataFilter | None = None
+        self,
+        *,
+        metadata_filter: MetadataFilter | None = None,
+        title_groups: list[set[str]] | None = None,
     ) -> dict[str, Game]:
         """Group entries into games keyed by their best English title.
 
@@ -182,11 +185,15 @@ class DatFile:
         by a clone id, transitively, so each entry belongs to exactly one game.
         Grouping by title as well as clone id keeps a game's variants together
         even when the dat does not clone-link them all (multi-disc sets,
-        Virtual Console re-releases, ...). The result is ordered
-        case-insensitively by key.
+        Virtual Console re-releases, ...). ``title_groups`` (from a clone list)
+        adds cross-title edges so differently-named regional releases group too.
+        The result is ordered case-insensitively by key.
         """
         metadata_list = list(self.metadata(metadata_filter=metadata_filter))
         by_game_id = {m.game_id: m for m in metadata_list if m.game_id}
+        stems_by_title: dict[str, list[str]] = {}
+        for metadata in metadata_list:
+            stems_by_title.setdefault(metadata.title, []).append(metadata.stem)
 
         groups = _UnionFind()
         title_representative: dict[str, str] = {}
@@ -200,6 +207,12 @@ class DatFile:
             parent = by_game_id.get(metadata.clone_of_id)
             if parent is not None:
                 groups.union(metadata.stem, parent.stem)
+        for group in title_groups or []:
+            stems = [
+                s for title in group for s in stems_by_title.get(title, [])
+            ]
+            for other in stems[1:]:
+                groups.union(stems[0], other)
 
         components: dict[str, list[Metadata]] = {}
         for metadata in metadata_list:

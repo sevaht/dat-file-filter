@@ -1,0 +1,95 @@
+{
+	"description": {
+		"name": "Sega - 32X (No-Intro)",
+		"lastUpdated": "2026-01-02 11:07:19",
+		"minimumVersion": "2.4.8"
+	},
+	"variants": [
+		{
+			"group": "Cosmic Carnage",
+			"titles": [
+				{
+					"searchTerm": "Cosmic Carnage",
+					"filters": [
+						{
+							"conditions": {
+								"matchRegions": ["Japan", "USA"]
+							},
+							"results": {
+								"localNames": {
+									"english": "Cosmic Carnage",
+									"japanese": "Cyber Brawl"
+								}
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"group": "Doom",
+			"titles": [
+				{"searchTerm": "Doom"},
+				{"searchTerm": "Doom RR", "priority": 2}
+			]
+		},
+		{
+			"group": "Knuckles' Chaotix",
+			"titles": [
+				{
+					"searchTerm": "Knuckles' Chaotix",
+					"filters": [
+						{
+							"conditions": {
+								"matchRegions": ["Japan", "USA"]
+							},
+							"results": {
+								"localNames": {
+									"japanese": "カオティクス"
+								}
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"group": "Zaxxon's Motherbase 2000",
+			"titles": [
+				{"searchTerm": "Motherbase"},
+				{
+					"searchTerm": "Zaxxon's Motherbase",
+					"filters": [
+						{
+							"conditions": {
+								"matchRegions": ["Japan", "USA"]
+							},
+							"results": {
+								"localNames": {
+									"english": "Zaxxon's Motherbase 2000",
+									"japanese": "ＰＡＲＡＳＱＵＡＤ"
+								}
+							}
+						}
+					]
+				},
+				{
+					"searchTerm": "Zaxxon's Motherbase 2000",
+					"filters": [
+						{
+							"conditions": {
+								"matchRegions": ["Japan", "USA"]
+							},
+							"results": {
+								"localNames": {
+									"english": "Zaxxon's Motherbase 2000",
+									"japanese": "ＰＡＲＡＳＱＵＡＤ"
+								}
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}

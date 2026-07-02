@@ -1,0 +1,16 @@
+{
+	"description": {
+		"name": "Arcade - Namco - System 246 (Redump)",
+		"lastUpdated": "2026-01-02 11:07:19",
+		"minimumVersion": "2.4.8"
+	},
+	"variants": [
+		{
+			"group": "Kidou Senshi Z Gundam - AEUG vs. Titans",
+			"titles": [
+				{"searchTerm": "Kidou Senshi Z Gundam - AEUG vs. Titans DX"},
+				{"searchTerm": "Kidou Senshi Z Gundam - AEUG vs. Titans", "priority": 2}
+			]
+		}
+	]
+}

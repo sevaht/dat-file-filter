@@ -1,0 +1,18 @@
+{
+	"description": {
+		"name": "Benesse - Pocket Challenge W (No-Intro)",
+		"lastUpdated": "2026-01-02 11:07:19",
+		"minimumVersion": "2.4.8"
+	},
+	"variants": [
+		{
+			"group": "Shinkenzemi Chuugaku Kouza - Chuugaku Rika Pack",
+			"titles": [
+				{"searchTerm": "Shinkenzemi Chuugaku Kouza - Chuugaku Rika Pack (1-bunya - Soft 2-bunya Soft Kanzen Taiou Ban)"},
+				{"searchTerm": "Shinkenzemi Chuugaku Kouza - Chuugaku Rika (1-bunya)", "priority": 2},
+				{"searchTerm": "Shinkenzemi Chuugaku Kouza - Chuugaku Rika Pack", "priority": 2},
+				{"searchTerm": "Shinkenzemi Chuugaku Kouza - Chuugaku Rika (2-bunya)", "priority": 3}
+			]
+		}
+	]
+}

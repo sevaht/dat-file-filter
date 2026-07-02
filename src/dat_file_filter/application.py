@@ -16,6 +16,7 @@ from typing import TYPE_CHECKING
 
 from sevaht_utility.log_utility import add_log_arguments, configure_logging
 
+from . import clonelist
 from .console import configure_color, print_line
 from .datfile import DatFile
 from .grouping import build_marked_tree, render_marked_tree
@@ -67,6 +68,37 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
     )
 
+    grouping = parser.add_argument_group(
+        "grouping",
+        "Cross-name grouping via clone lists. A matching clone list is required"
+        " unless --no-clone-lists is given.",
+    )
+    grouping.add_argument(
+        "--system",
+        help=(
+            "Clone-list system to use (see --list-clone-lists) instead of"
+            " detecting it from the dat's name."
+        ),
+    )
+    grouping.add_argument(
+        "--no-clone-lists",
+        action="store_true",
+        help="Proceed without a clone list (group by title/clone id only).",
+    )
+    grouping.add_argument(
+        "--list-clone-lists",
+        action="store_true",
+        help="List the available clone-list systems and exit.",
+    )
+    grouping.add_argument(
+        "--clone-list-dir",
+        help="Use clone lists from this directory instead of the bundled ones.",
+    )
+    grouping.add_argument(
+        "--clone-list",
+        help="Use this specific clone-list JSON file (overrides detection).",
+    )
+
     output = parser.add_argument_group(
         "output", "What to emit (default: --tree)."
     )
@@ -102,7 +134,9 @@ def _build_parser() -> argparse.ArgumentParser:
         "--categories", action="store_true", help="List every category seen."
     )
 
-    parser.add_argument("dat_file", help="Path to the source .dat file.")
+    parser.add_argument(
+        "dat_file", nargs="?", help="Path to the source .dat file."
+    )
     return parser
 
 
@@ -124,10 +158,41 @@ def _content_filter(args: argparse.Namespace) -> MetadataFilter | None:
     )
 
 
-def _select_stems(args: argparse.Namespace, datfile: DatFile) -> set[str]:
+def _resolve_title_groups(
+    args: argparse.Namespace, datfile: DatFile, parser: argparse.ArgumentParser
+) -> list[set[str]] | None:
+    if args.no_clone_lists:
+        return None
+    if args.clone_list:
+        return clonelist.load_groups(
+            Path(args.clone_list).read_text(encoding="utf-8")
+        )
+    directory = Path(args.clone_list_dir) if args.clone_list_dir else None
+    if args.system:
+        names = [args.system]
+    else:
+        names = [datfile.name, Path(args.dat_file).name]
+    groups = clonelist.find_groups(*names, directory=directory)
+    if groups is None:
+        parser.error(
+            "no clone list found for "
+            + (f"system {args.system!r}" if args.system else "this dat")
+            + "; choose one with --system (see --list-clone-lists), point to"
+            " a file with --clone-list, or pass --no-clone-lists to proceed"
+            " without one"
+        )
+    return groups
+
+
+def _select_stems(
+    args: argparse.Namespace,
+    datfile: DatFile,
+    title_groups: list[set[str]] | None,
+) -> set[str]:
     """The kept set: candidates, reduced to best English per variant if asked."""
     games = datfile.build_games(
-        metadata_filter=is_release if args.releases_only else None
+        metadata_filter=is_release if args.releases_only else None,
+        title_groups=title_groups,
     )
     stems: set[str] = set()
     for game in games.values():
@@ -176,8 +241,11 @@ def _print_list(datfile: DatFile, kept: set[str]) -> None:
     _print_summary(datfile, kept)
 
 
-def _print_tree(datfile: DatFile, kept: set[str]) -> None:
-    for title, game in datfile.build_games().items():
+def _print_tree(
+    datfile: DatFile, kept: set[str], title_groups: list[set[str]] | None
+) -> None:
+    games = datfile.build_games(title_groups=title_groups)
+    for title, game in games.items():
         tree = build_marked_tree(
             title, game.versions, lambda metadata: _mark(metadata, kept)
         )
@@ -240,11 +308,20 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = parser.parse_args(args=argv)
     configure_logging(args)
     configure_color(args.color)
+
+    if args.list_clone_lists:
+        directory = Path(args.clone_list_dir) if args.clone_list_dir else None
+        for system in clonelist.available_systems(directory):
+            print(system)
+        return 0
+    if not args.dat_file:
+        parser.error("the dat_file argument is required")
     if args.name and not args.output:
         parser.error("--name requires -o/--output")
 
     datfile = DatFile(args.dat_file)
-    kept = _select_stems(args, datfile)
+    title_groups = _resolve_title_groups(args, datfile, parser)
+    kept = _select_stems(args, datfile, title_groups)
     emitted = False
     if args.output:
         count = datfile.write(Path(args.output), kept=kept, name=args.name)
@@ -262,5 +339,5 @@ def main(argv: Sequence[str] | None = None) -> int:
         _print_list(datfile, kept)
         emitted = True
     if args.tree or not emitted:
-        _print_tree(datfile, kept)
+        _print_tree(datfile, kept, title_groups)
     return 0

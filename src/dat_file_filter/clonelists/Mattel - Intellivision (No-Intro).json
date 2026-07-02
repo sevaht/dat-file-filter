@@ -1,0 +1,237 @@
+{
+	"description": {
+		"name": "Mattel - Intellivision (No-Intro)",
+		"lastUpdated": "2026-01-02 11:07:19",
+		"minimumVersion": "2.4.8"
+	},
+	"variants": [
+		{
+			"group": "ABPA Backgammon",
+			"titles": [
+				{"searchTerm": "ABPA Backgammon"}
+			],
+			"compilations": [
+				{"searchTerm": "Triple Challenge - Chess, Checkers, Backgammon"}
+			]
+		},
+		{
+			"group": "Advanced Dungeons & Dragons",
+			"titles": [
+				{"searchTerm": "Advanced Dungeons & Dragons"},
+				{"searchTerm": "Adventure", "priority": 2}
+			]
+		},
+		{
+			"group": "Advanced Dungeons & Dragons - Treasure of Tarmin",
+			"titles": [
+				{"searchTerm": "Advanced Dungeons & Dragons - Treasure of Tarmin"},
+				{"searchTerm": "Minotaur", "priority": 2}
+			]
+		},
+		{
+			"group": "Armor Battle",
+			"titles": [
+				{"searchTerm": "Armor Battle (Fast Tanks)"},
+				{"searchTerm": "Armor Battle (Slow Tanks)", "priority": 2}
+			]
+		},
+		{
+			"group": "Astrosmash",
+			"titles": [
+				{"searchTerm": "Astrosmash"},
+				{"searchTerm": "Meteor", "priority": 2}
+			]
+		},
+		{
+			"group": "Auto Racing",
+			"titles": [
+				{"searchTerm": "Auto Racing (Car-Relative Steering)"},
+				{"searchTerm": "Auto Racing (Screen-Relative Steering)", "priority": 2}
+			]
+		},
+		{
+			"group": "BattleTanks",
+			"titles": [
+				{"searchTerm": "BattleTanks"}
+			],
+			"compilations": [
+				{"searchTerm": "Triple Action"}
+			]
+		},
+		{
+			"group": "Biplanes",
+			"titles": [
+				{"searchTerm": "Biplanes"}
+			],
+			"compilations": [
+				{"searchTerm": "Triple Action"}
+			]
+		},
+		{
+			"group": "Checkers",
+			"titles": [
+				{"searchTerm": "Checkers"}
+			],
+			"compilations": [
+				{"searchTerm": "Triple Challenge - Chess, Checkers, Backgammon"}
+			]
+		},
+		{
+			"group": "Crosswords",
+			"titles": [
+				{"searchTerm": "Crosswords"}
+			],
+			"compilations": [
+				{"searchTerm": "Learning Fun II - Word Wizard, Memory Fun"}
+			]
+		},
+		{
+			"group": "Demonstration Cartridge - Blue",
+			"categories": ["Demos"],
+			"titles": [
+				{"searchTerm": "Demonstration Cartridge - Blue"}
+			]
+		},
+		{
+			"group": "Demonstration Cartridge - Green",
+			"categories": ["Demos"],
+			"titles": [
+				{"searchTerm": "Demonstration Cartridge - Green"}
+			]
+		},
+		{
+			"group": "Demonstration Cartridge - Red",
+			"categories": ["Demos"],
+			"titles": [
+				{"searchTerm": "Demonstration Cartridge - Red"}
+			]
+		},
+		{
+			"group": "Electric Company, The - Math Fun",
+			"titles": [
+				{"searchTerm": "Electric Company, The - Math Fun (Forward Entry)"},
+				{"searchTerm": "Electric Company, The - Math Fun (Reverse Entry)", "priority": 2}
+			]
+		},
+		{
+			"group": "Factor Fun",
+			"titles": [
+				{"searchTerm": "Factor Fun"}
+			],
+			"compilations": [
+				{"searchTerm": "Learning Fun I - Math Master, Factor Fun"}
+			]
+		},
+		{
+			"group": "International Demonstration Cartridge",
+			"categories": ["Demos"],
+			"titles": [
+				{"searchTerm": "International Demonstration Cartridge"}
+			]
+		},
+		{
+			"group": "Math Master",
+			"titles": [
+				{"searchTerm": "Math Master"}
+			],
+			"compilations": [
+				{"searchTerm": "Learning Fun I - Math Master, Factor Fun"}
+			]
+		},
+		{
+			"group": "Memory Fun",
+			"titles": [
+				{"searchTerm": "Memory Fun"}
+			],
+			"compilations": [
+				{"searchTerm": "Learning Fun II - Word Wizard, Memory Fun"}
+			]
+		},
+		{
+			"group": "MTE 201 Test Cartridge",
+			"categories": ["Applications"],
+			"titles": [
+				{"searchTerm": "MTE 201 Test Cartridge"},
+				{"searchTerm": "MTE 201 Test Cartridgea"}
+			]
+		},
+		{
+			"group": "Pac-Man",
+			"titles": [
+				{"searchTerm": "Pac-Man (Atarisoft)"},
+				{"searchTerm": "Pac-Man (INTV Corp.)", "priority": 2}
+			]
+		},
+		{
+			"group": "Racing Cars",
+			"titles": [
+				{"searchTerm": "Racing Cars"}
+			],
+			"compilations": [
+				{"searchTerm": "Triple Action"}
+			]
+		},
+		{
+			"group": "Super Pro Football",
+			"titles": [
+				{"searchTerm": "Super Pro Football (Revision)"},
+				{"searchTerm": "Super Pro Football", "priority": 2}
+			]
+		},
+		{
+			"group": "Thin Ice",
+			"titles": [
+				{"searchTerm": "Thin Ice"},
+				{"searchTerm": "Duncan's Thin Ice", "priority": 2}
+			]
+		},
+		{
+			"group": "TRON Deadly Discs",
+			"titles": [
+				{"searchTerm": "TRON Deadly Discs"},
+				{"searchTerm": "Deadly Dogs", "priority": 2}
+			]
+		},
+		{
+			"group": "USCF Chess",
+			"titles": [
+				{"searchTerm": "USCF Chess"}
+			],
+			"compilations": [
+				{"searchTerm": "Triple Challenge - Chess, Checkers, Backgammon"}
+			]
+		},
+		{
+			"group": "Word Hunt",
+			"titles": [
+				{"searchTerm": "Word Hunt"}
+			],
+			"compilations": [
+				{"searchTerm": "Learning Fun II - Word Wizard, Memory Fun"}
+			]
+		},
+		{
+			"group": "Word Rockets",
+			"titles": [
+				{"searchTerm": "Word Rockets"}
+			],
+			"compilations": [
+				{"searchTerm": "Learning Fun II - Word Wizard, Memory Fun"}
+			]
+		},
+		{
+			"group": "World Championship Baseball",
+			"titles": [
+				{"searchTerm": "World Championship Baseball"},
+				{"searchTerm": "All-Star Major League Baseball", "priority": 2}
+			]
+		},
+		{
+			"group": "World Cup Soccer",
+			"titles": [
+				{"searchTerm": "Super Soccer"},
+				{"searchTerm": "World Cup Soccer"}
+			]
+		}
+	]
+}

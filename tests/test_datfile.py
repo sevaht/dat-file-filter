@@ -157,6 +157,24 @@ def test_write_keeps_cloneofid_when_parent_kept(tmp_path: Path) -> None:
     assert 'cloneofid="0001"' in output.read_text(encoding="utf-8")
 
 
+def test_title_groups_merge_differently_named_entries(tmp_path: Path) -> None:
+    dat = """<?xml version="1.0"?>
+<datafile>
+  <header><name>Sample</name></header>
+  <game name="Alpha (USA)"><description>Alpha (USA)</description></game>
+  <game name="Beta (Japan)"><description>Beta (Japan)</description></game>
+</datafile>
+"""
+    datfile = DatFile(_write_dat(tmp_path, dat))
+    # Different titles, no clone ids: two separate games.
+    assert len(datfile.build_games()) == 2
+    # A clone-list group linking the two titles merges them into one.
+    games = datfile.build_games(title_groups=[{"Alpha", "Beta"}])
+    assert len(games) == 1
+    (game,) = games.values()
+    assert {m.title for m in game.versions} == {"Alpha", "Beta"}
+
+
 def test_write_repoints_clones_when_parent_removed(tmp_path: Path) -> None:
     datfile = DatFile(_write_dat(tmp_path, _FAMILY_DAT))
     output = tmp_path / "out.dat"

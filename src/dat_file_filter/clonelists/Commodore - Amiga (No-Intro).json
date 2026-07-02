@@ -1,0 +1,23 @@
+{
+	"description": {
+		"name": "Commodore - Amiga (No-Intro)",
+		"lastUpdated": "2026-01-02 11:07:19",
+		"minimumVersion": "2.4.8"
+	},
+	"variants": [
+		{
+			"group": "Quadralien (With StarRay Demo)",
+			"categories": ["Games"],
+			"titles": [
+				{"searchTerm": "Quadralien (With StarRay Demo)"}
+			]
+		},
+		{
+			"group": "Rugby - The World Cup (With Demo Option)",
+			"categories": ["Games"],
+			"titles": [
+				{"searchTerm": "Rugby - The World Cup (With Demo Option)"}
+			]
+		}
+	]
+}

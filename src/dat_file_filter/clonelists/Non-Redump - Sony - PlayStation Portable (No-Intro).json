@@ -1,0 +1,79 @@
+{
+	"description": {
+		"name": "Non-Redump - Sony - PlayStation Portable (No-Intro)",
+		"lastUpdated": "2026-01-10 14:23:34",
+		"minimumVersion": "2.4.8"
+	},
+	"variants": [
+		{
+			"group": "Cars",
+			"titles": [
+				{"searchTerm": "Bilar"},
+				{"searchTerm": "Cars"}
+			]
+		},
+		{
+			"group": "Crisis Core - Final Fantasy VII",
+			"titles": [
+				{"searchTerm": "Crisis Core - Final Fantasy VII (10th Anniversary Limited Edition)"},
+				{"searchTerm": "Crisis Core - Final Fantasy VII", "priority": 2}
+			]
+		},
+		{
+			"group": "FIFA Soccer 13",
+			"titles": [
+				{"searchTerm": "FIFA 13"},
+				{"searchTerm": "FIFA Soccer 13"}
+			]
+		},
+		{
+			"group": "Final Approach 2 - 1st Priority Portable",
+			"titles": [
+				{"searchTerm": "Final Approach 2 - 1st Priority Portable"},
+				{"searchTerm": "Final Approach 2 - 1st Priority Portable (Limited Edition)", "priority": 2}
+			]
+		},
+		{
+			"group": "King of Fighters Collection, The - The Orochi Saga",
+			"titles": [
+				{"searchTerm": "King of Fighters Collection, The - The Orochi Saga"},
+				{"searchTerm": "King of Fighters Portable '94-'98, The - Chapter of Orochi"}
+			]
+		},
+		{
+			"group": "Lost Regnum - Makutsu no Koutei",
+			"titles": [
+				{"searchTerm": "Lost Regnum - Makutsu no Koutei"},
+				{"searchTerm": "Lost Regnum - The Emperor of Theives"}
+			]
+		},
+		{
+			"group": "Ratchet & Clank - Size Matters",
+			"titles": [
+				{"searchTerm": "Ratchet & Clank 5 - Gekitotsu! Dodeka Ginga no MiriMiri Gundan"},
+				{"searchTerm": "Ratchet & Clank - Size Matters"}
+			]
+		},
+		{
+			"group": "Sims 2, The",
+			"titles": [
+				{"searchTerm": "Sims 2, The"},
+				{"searchTerm": "Sims 2, The - Dr. Dominic no Inbou"}
+			]
+		},
+		{
+			"group": "TalkMan EURO - TalkMan Europa Gengo Ban",
+			"titles": [
+				{"searchTerm": "TalkMan Euro"},
+				{"searchTerm": "TalkMan EURO - TalkMan Europa Gengo Ban"}
+			]
+		},
+		{
+			"group": "WTF - Work Time Fun",
+			"titles": [
+				{"searchTerm": "Beit Hell 2000"},
+				{"searchTerm": "WTF - Work Time Fun"}
+			]
+		}
+	]
+}

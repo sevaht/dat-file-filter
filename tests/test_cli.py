@@ -37,6 +37,7 @@ def test_list_marks_kept_and_removed(
         [
             "--color",
             "never",
+            "--no-clone-lists",
             "--releases-only",
             "--best-english",
             "--list",
@@ -67,6 +68,7 @@ def test_summary_shown_when_stdout_is_terminal(
         [
             "--color",
             "never",
+            "--no-clone-lists",
             "--releases-only",
             "--best-english",
             "--list",
@@ -83,7 +85,7 @@ def test_no_english_kept_entry_is_yellow(
     # No selection: everything is kept, so the Japanese-only entry is kept but
     # flagged as having no English (~), while USA entries are +.
     dat = _write(tmp_path)
-    code = main(["--color", "never", "--list", dat])
+    code = main(["--color", "never", "--no-clone-lists", "--list", dat])
     assert code == 0
     out = capsys.readouterr().out
     assert "~ Cool Game (Japan) (Ja)" in out
@@ -94,7 +96,7 @@ def test_default_output_is_tree(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
     dat = _write(tmp_path)
-    code = main(["--color", "never", dat])
+    code = main(["--color", "never", "--no-clone-lists", dat])
     assert code == 0
     out = capsys.readouterr().out
     assert "Cool Game" in out  # game header line
@@ -104,7 +106,16 @@ def test_default_output_is_tree(
 def test_output_writes_filtered_dat(tmp_path: Path) -> None:
     dat = _write(tmp_path)
     output = tmp_path / "out.dat"
-    code = main(["--releases-only", "--best-english", "-o", str(output), dat])
+    code = main(
+        [
+            "--no-clone-lists",
+            "--releases-only",
+            "--best-english",
+            "-o",
+            str(output),
+            dat,
+        ]
+    )
     assert code == 0
     text = output.read_text(encoding="utf-8")
     assert "Cool Game (USA)" in text
@@ -114,3 +125,36 @@ def test_output_writes_filtered_dat(tmp_path: Path) -> None:
 def test_name_requires_output(tmp_path: Path) -> None:
     with pytest.raises(SystemExit):
         main(["--name", "X", _write(tmp_path)])
+
+
+def test_errors_when_no_clone_list_matches(tmp_path: Path) -> None:
+    # The synthetic "Sample" system matches no clone list; without an override
+    # this is an error rather than a silent fallback.
+    with pytest.raises(SystemExit):
+        main(["--color", "never", "--list", _write(tmp_path)])
+
+
+def test_list_clone_lists_lists_bundled_systems(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    code = main(["--list-clone-lists"])
+    assert code == 0
+    out = capsys.readouterr().out
+    assert "Sony - PlayStation" in out
+    assert "Nintendo - Super Nintendo Entertainment System" in out
+
+
+def test_system_flag_selects_bundled_list(tmp_path: Path) -> None:
+    # --system loads a bundled list even though the dat's own name would not
+    # match; the Sample titles simply aren't in it, so nothing errors.
+    code = main(
+        [
+            "--color",
+            "never",
+            "--system",
+            "Sony - PlayStation",
+            "--list",
+            _write(tmp_path),
+        ]
+    )
+    assert code == 0

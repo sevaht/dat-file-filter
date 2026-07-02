@@ -1,0 +1,64 @@
+{
+	"description": {
+		"name": "Fujitsu - FM-Towns (Redump)",
+		"lastUpdated": "2026-01-02 11:07:19",
+		"minimumVersion": "2.4.8"
+	},
+	"variants": [
+		{
+			"group": "Euphony II",
+			"titles": [
+				{"searchTerm": "Euphony II & Score"},
+				{"searchTerm": "Euphony II & MTR", "priority": 2}
+			]
+		},
+		{
+			"group": "FM Series Software Taikenban CD-ROM",
+			"categories": ["Applications", "Demos"],
+			"titles": [
+				{"searchTerm": "FM Series Software Taikenban CD-ROM"}
+			]
+		},
+		{
+			"group": "GNU for Towns Rel. 2",
+			"titles": [
+				{"searchTerm": "GNU for Towns Rel. 2"},
+				{"searchTerm": "GNU for Towns", "priority": 2}
+			]
+		},
+		{
+			"group": "Ms. Detective File 1 - Iwami Ginzan Satsujin Jiken (Disc 1)",
+			"titles": [
+				{"searchTerm": "Ms. Detective File 1 - Iwami Ginzan Satsujin Jiken (Disc 1)"}
+			],
+			"supersets": [
+				{"searchTerm": "Ms. Detective File 1 - Iwami Ginzan Satsujin Jiken"}
+			]
+		},
+		{
+			"group": "Ms. Detective File 1 - Iwami Ginzan Satsujin Jiken (Disc 2)",
+			"titles": [
+				{"searchTerm": "Ms. Detective File 1 - Iwami Ginzan Satsujin Jiken (Disc 2)"}
+			],
+			"supersets": [
+				{"searchTerm": "Ms. Detective File 1 - Iwami Ginzan Satsujin Jiken"}
+			]
+		},
+		{
+			"group": "Strike Commander",
+			"titles": [
+				{"searchTerm": "Strike Commander"}
+			],
+			"supersets": [
+				{"searchTerm": "Strike Commander Plus"}
+			]
+		},
+		{
+			"group": "Super Real Mahjong PII & PIII+",
+			"titles": [
+				{"searchTerm": "Super Real Mahjong PII & PIII+"},
+				{"searchTerm": "Super Real Mahjong PII & PIII", "priority": 2}
+			]
+		}
+	]
+}
