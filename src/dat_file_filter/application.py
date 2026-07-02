@@ -155,7 +155,16 @@ def _mark(metadata: Metadata, kept: set[str]) -> str:
     return "+" if _has_english(metadata) else "~"
 
 
+def _stdout_is_terminal() -> bool:
+    return sys.stdout.isatty()
+
+
 def _print_summary(datfile: DatFile, kept: set[str]) -> None:
+    # Only when stdout is a real terminal. If it is piped (e.g. to a pager),
+    # writing this to stderr while the pager owns the screen scrambles its
+    # display, and it would pollute redirected/captured output besides.
+    if not _stdout_is_terminal():
+        return
     removed = len(datfile.entries) - len(kept)
     print(f"{len(kept)} kept, {removed} removed", file=sys.stderr)
 

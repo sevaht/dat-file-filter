@@ -50,7 +50,31 @@ def test_list_marks_kept_and_removed(
     assert "+ Cool Game (USA)" in captured.out
     assert "- Cool Game (Japan) (Ja)" in captured.out
     assert "- Cool Game (Demo) (USA)" in captured.out
-    assert "1 kept, 2 removed" in captured.err
+    # The summary is suppressed when stdout is not a terminal (as under
+    # capture), so it can't scramble a pager or pollute piped output.
+    assert "kept" not in captured.err
+
+
+def test_summary_shown_when_stdout_is_terminal(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        "dat_file_filter.application._stdout_is_terminal", lambda: True
+    )
+    code = main(
+        [
+            "--color",
+            "never",
+            "--releases-only",
+            "--best-english",
+            "--list",
+            _write(tmp_path),
+        ]
+    )
+    assert code == 0
+    assert "1 kept, 2 removed" in capsys.readouterr().err
 
 
 def test_no_english_kept_entry_is_yellow(
