@@ -2046,7 +2046,6 @@
 				{"searchTerm": "Dynasty Warriors 4"},
 				{"searchTerm": "Jin Samguk Mussang 3"},
 				{"searchTerm": "Shin Sangoku Musou 3 (Series Collection Joukan)"},
-				{"searchTerm": "Shin Sangoku Musou 3 - Empires (Premium Box)", "priority": 2},
 				{"searchTerm": "Shin Sangoku Musou 3", "priority": 3}
 			]
 		},
@@ -2055,7 +2054,8 @@
 			"titles": [
 				{"searchTerm": "Dynasty Warriors 4 - Empires"},
 				{"searchTerm": "Jin Samguk Mussang 3 - Empires"},
-				{"searchTerm": "Shin Sangoku Musou 3 - Empires"}
+				{"searchTerm": "Shin Sangoku Musou 3 - Empires"},
+				{"searchTerm": "Shin Sangoku Musou 3 - Empires (Premium Box)", "priority": 2}
 			]
 		},
 		{

@@ -1,7 +1,7 @@
 """Tag parsing: turn a single raw tag string into a recognized attribute.
 
-A :class:`PatternParser` wraps a compiled regex plus an extractor that pulls the
-meaningful value out of a match. A :class:`TagMatcher` is a stateful,
+A :class:`PatternParser` wraps a compiled regex plus an extractor that pulls
+the meaningful value out of a match. A :class:`TagMatcher` is a stateful,
 single-slot consumer built from a parser: it remembers the first value it
 accepts and rejects conflicting duplicates. ``Metadata.from_stem`` runs a raw
 tag through an ordered set of matchers to classify it.

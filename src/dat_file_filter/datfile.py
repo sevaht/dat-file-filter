@@ -1,8 +1,9 @@
 """Read a dat file, group its entries into games, and write filtered subsets.
 
-Parsing uses ElementTree, which also serves as the writer: :meth:`DatFile.write`
-rebuilds the document from the parsed elements and pretty-prints it, so output
-is a clean, canonical XML form rather than a copy of the source's exact bytes.
+Parsing uses ElementTree, which also serves as the writer:
+:meth:`DatFile.write` rebuilds the document from the parsed elements and
+pretty-prints it, so output is a clean, canonical XML form rather than a copy
+of the source's exact bytes.
 Writing with no filter (every entry kept) yields a pristine reformatted copy;
 diffing that against a filtered write shows only the removed entries (and any
 ``cloneofid`` stripped because its target was removed). Grouping links variants
@@ -111,6 +112,35 @@ class _UnionFind:
             self._parent[first_root] = second_root
 
 
+def _fallback_title_union(
+    groups: _UnionFind,
+    metadata_list: list[Metadata],
+    stems_by_title: dict[str, list[str]],
+) -> None:
+    """Union same-title entries, but never bridge two reliable groups.
+
+    Whatever ``groups`` has merged by now (via clone ids and clone lists) is
+    treated as reliable. Same-title entries are then merged as a fallback,
+    except when a title is shared by two or more distinct reliable groups:
+    those stay apart, and only the loose (non-reliable) same-title entries
+    merge.
+    """
+    root_of = {m.stem: groups.find(m.stem) for m in metadata_list}
+    size: dict[str, int] = {}
+    for root in root_of.values():
+        size[root] = size.get(root, 0) + 1
+    reliable = {stem for stem, root in root_of.items() if size[root] > 1}
+    for stems in stems_by_title.values():
+        reliable_roots = {groups.find(s) for s in stems if s in reliable}
+        if len(reliable_roots) <= 1:
+            for other in stems[1:]:
+                groups.union(stems[0], other)
+        else:
+            loose = [s for s in stems if s not in reliable]
+            for other in loose[1:]:
+                groups.union(loose[0], other)
+
+
 class DatFile:
     def __init__(self, path: Path | str) -> None:
         self.name = ""
@@ -181,13 +211,14 @@ class DatFile:
     ) -> dict[str, Game]:
         """Group entries into games keyed by their best English title.
 
-        Entries are unified into one game when they share a title or are tied
-        by a clone id, transitively, so each entry belongs to exactly one game.
-        Grouping by title as well as clone id keeps a game's variants together
-        even when the dat does not clone-link them all (multi-disc sets,
-        Virtual Console re-releases, ...). ``title_groups`` (from a clone list)
-        adds cross-title edges so differently-named regional releases group too.
-        The result is ordered case-insensitively by key.
+        Clone ids and ``title_groups`` (clone lists) are the reliable,
+        verified signals and are applied first. Shared-title matching is only
+        a fallback: it keeps a game's variants together when the dat doesn't
+        clone-link them all (multi-disc sets, Virtual Console re-releases,
+        ...), but it never bridges two entries already in *different* reliable
+        groups — so a generic title shared by two distinct games can't merge
+        them. Each entry belongs to exactly one game; the result is ordered
+        case-insensitively by key.
         """
         metadata_list = list(self.metadata(metadata_filter=metadata_filter))
         by_game_id = {m.game_id: m for m in metadata_list if m.game_id}
@@ -196,13 +227,9 @@ class DatFile:
             stems_by_title.setdefault(metadata.title, []).append(metadata.stem)
 
         groups = _UnionFind()
-        title_representative: dict[str, str] = {}
         for metadata in metadata_list:
             groups.add(metadata.stem)
-            representative = title_representative.setdefault(
-                metadata.title, metadata.stem
-            )
-            groups.union(metadata.stem, representative)
+        # Reliable grouping first: clone ids, then clone lists.
         for metadata in metadata_list:
             parent = by_game_id.get(metadata.clone_of_id)
             if parent is not None:
@@ -213,6 +240,8 @@ class DatFile:
             ]
             for other in stems[1:]:
                 groups.union(stems[0], other)
+        # Title matching is a fallback and must not bridge reliable groups.
+        _fallback_title_union(groups, metadata_list, stems_by_title)
 
         components: dict[str, list[Metadata]] = {}
         for metadata in metadata_list:
@@ -234,10 +263,10 @@ class DatFile:
         The output's parent-clone links express how the tool groups games. An
         already-valid clone group whose parent is still present is left
         untouched; links are (re)built only when the parent was removed or the
-        entries were grouped by title alone. When (re)building, the best English
-        entry becomes the parent and the rest are ``cloneofid`` clones of it, so
-        no reference dangles and title-only dats gain clone links. ``id``
-        attributes are assigned only where a link needs one. The header
+        entries were grouped by title alone. When (re)building, the best
+        English entry becomes the parent and the rest are ``cloneofid`` clones
+        of it, so no reference dangles and title-only dats gain clone links.
+        ``id`` attributes are assigned only where a link needs one. The header
         ``<name>`` changes only when ``name`` is given. Returns the number of
         entries written.
         """
@@ -296,7 +325,7 @@ class DatFile:
         assign_id: dict[str, str],
         set_clone: dict[str, str | None],
     ) -> None:
-        """Decide each kept game member's ``id``/``cloneofid`` for the output."""
+        """Assign each kept member's ``id``/``cloneofid`` for the output."""
         if len(members) == 1:
             set_clone[members[0].stem] = None  # nothing to clone; drop any ref
             return

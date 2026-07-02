@@ -157,6 +157,50 @@ def test_write_keeps_cloneofid_when_parent_kept(tmp_path: Path) -> None:
     assert 'cloneofid="0001"' in output.read_text(encoding="utf-8")
 
 
+def test_title_does_not_bridge_two_clone_linked_games(tmp_path: Path) -> None:
+    # Two distinct games, each grouped by clone id, share the generic title
+    # "Bar" on one entry. Title matching must not merge them.
+    dat = """<?xml version="1.0"?>
+<datafile>
+  <header><name>Sample</name></header>
+  <game name="Foo (USA)" id="1"><description>Foo (USA)</description></game>
+  <game name="Bar (Japan)" id="2" cloneofid="1">
+    <description>Bar (Japan)</description>
+  </game>
+  <game name="Baz (USA)" id="3"><description>Baz (USA)</description></game>
+  <game name="Bar (Europe)" id="4" cloneofid="3">
+    <description>Bar (Europe)</description>
+  </game>
+</datafile>
+"""
+    games = DatFile(_write_dat(tmp_path, dat)).build_games()
+    assert len(games) == 2
+    assert all(len(game.versions) == 2 for game in games.values())
+
+
+def test_loose_entry_joins_its_game_by_title(tmp_path: Path) -> None:
+    # Disc 3 has no clone id but shares the title with the clone-linked discs,
+    # so the title fallback still pulls it into the same game.
+    dat = """<?xml version="1.0"?>
+<datafile>
+  <header><name>Sample</name></header>
+  <game name="Multi (USA) (Disc 1)" id="1">
+    <description>Multi (USA) (Disc 1)</description>
+  </game>
+  <game name="Multi (USA) (Disc 2)" id="2" cloneofid="1">
+    <description>Multi (USA) (Disc 2)</description>
+  </game>
+  <game name="Multi (USA) (Disc 3)">
+    <description>Multi (USA) (Disc 3)</description>
+  </game>
+</datafile>
+"""
+    games = DatFile(_write_dat(tmp_path, dat)).build_games()
+    assert len(games) == 1
+    (game,) = games.values()
+    assert len(game.versions) == 3
+
+
 def test_title_groups_merge_differently_named_entries(tmp_path: Path) -> None:
     dat = """<?xml version="1.0"?>
 <datafile>

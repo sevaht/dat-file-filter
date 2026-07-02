@@ -108,8 +108,8 @@ def build_marked_tree(
     """Build a variant tree whose entry leaves are marked by ``mark_for``.
 
     The structure comes from every version, so the full grouping is shown; a
-    grouping level is included only when at least one version defines that field
-    (so a cartridge-only game shows no ``<Discless>`` placeholder).
+    grouping level is included only when at least one version defines that
+    field (so a cartridge-only game shows no ``<Discless>`` placeholder).
     """
     levels = _active_levels(versions)
     root = GroupNode(label=game_title, children=_group(versions, levels))

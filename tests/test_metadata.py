@@ -39,3 +39,39 @@ def test_english_priority_orders_usa_first() -> None:
     japan = Metadata.from_stem("Some Game (Japan) (Ja)")
     assert usa.localization.english_priority() > 0
     assert japan.localization.english_priority() == 0
+
+
+def test_region_implied_english_ranking() -> None:
+    def priority(stem: str) -> int:
+        return Metadata.from_stem(stem).localization.english_priority()
+
+    # A bare (World) release is worldwide English, ranked just below the
+    # explicit English-language tags and ahead of the other regions.
+    world = priority("Some Game (World)")
+    assert world > 0
+    # Monolingual-English regions outrank the "assumed English" multilingual
+    # ones; Canada and Europe (bilingual/multilingual) sort last.
+    assert (
+        priority("Some Game (USA)")
+        < world
+        < priority("Some Game (UK)")
+        < priority("Some Game (Canada)")
+        < priority("Some Game (Europe)")
+    )
+
+
+def test_non_english_language_tag_overrides_region() -> None:
+    # An explicit non-English-only language list rules out region-implied
+    # English, even for otherwise-English regions.
+    assert (
+        Metadata.from_stem(
+            "Some Game (World) (Ja)"
+        ).localization.english_priority()
+        == 0
+    )
+    assert (
+        Metadata.from_stem(
+            "Some Game (Canada) (Fr)"
+        ).localization.english_priority()
+        == 0
+    )

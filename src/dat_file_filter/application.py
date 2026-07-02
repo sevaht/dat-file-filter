@@ -51,7 +51,10 @@ def _build_parser() -> argparse.ArgumentParser:
     selection.add_argument(
         "--releases-only",
         action="store_true",
-        help="Drop demos, prototypes/betas, early builds, non-game categories.",
+        help=(
+            "Drop demos, prototypes/betas, early builds, and non-game"
+            " categories."
+        ),
     )
     selection.add_argument(
         "--has-english",
@@ -70,8 +73,8 @@ def _build_parser() -> argparse.ArgumentParser:
 
     grouping = parser.add_argument_group(
         "grouping",
-        "Cross-name grouping via clone lists. A matching clone list is required"
-        " unless --no-clone-lists is given.",
+        "Cross-name grouping via clone lists. A matching clone list is"
+        " required unless --no-clone-lists is given.",
     )
     grouping.add_argument(
         "--system",
@@ -92,7 +95,7 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     grouping.add_argument(
         "--clone-list-dir",
-        help="Use clone lists from this directory instead of the bundled ones.",
+        help="Use clone lists from this directory, not the bundled ones.",
     )
     grouping.add_argument(
         "--clone-list",
@@ -189,7 +192,8 @@ def _select_stems(
     datfile: DatFile,
     title_groups: list[set[str]] | None,
 ) -> set[str]:
-    """The kept set: candidates, reduced to best English per variant if asked."""
+    """The kept set: candidates reduced to best English per variant if
+    asked."""
     games = datfile.build_games(
         metadata_filter=is_release if args.releases_only else None,
         title_groups=title_groups,

@@ -67,3 +67,19 @@ def test_available_systems_dedupes_and_sorts(tmp_path: Path) -> None:
         "Nintendo - Game Boy",
         "Sega - Saturn",
     ]
+
+
+def test_hash_manifest_is_not_treated_as_a_system(tmp_path: Path) -> None:
+    _write_clonelist(tmp_path / "Sega - Saturn (Redump).json", "A", "B")
+    (tmp_path / "hash.json").write_text(
+        json.dumps({"Sega - Saturn (Redump).json": "deadbeef"}),
+        encoding="utf-8",
+    )
+    # The integrity manifest is skipped: "hash" is not a system, and it is
+    # never selected as a clone list.
+    assert available_systems(tmp_path) == ["Sega - Saturn"]
+    assert find_groups("hash", directory=tmp_path) is None
+
+
+def test_bundled_available_systems_excludes_hash() -> None:
+    assert "hash" not in available_systems()

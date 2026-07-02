@@ -194,7 +194,10 @@ class Localization:
         if is_british_english:
             return 4
         if not_only_nonenglish:
-            if Region.CANADA in self.regions:
+            # Region-implied English (no explicit language tag). Monolingual-
+            # English regions are reliable; the bilingual/multilingual ones
+            # (Canada, Europe) are only assumed English, so they sort last.
+            if Region.WORLD in self.regions:
                 return 5
             if Region.UNITED_KINGDOM in self.regions:
                 return 6
@@ -202,8 +205,10 @@ class Localization:
                 return 7
             if Region.NEW_ZEALAND in self.regions:
                 return 8
-            if Region.EUROPE in self.regions:
+            if Region.CANADA in self.regions:
                 return 9
+            if Region.EUROPE in self.regions:
+                return 10
         return 0
 
     def __str__(self) -> str:

@@ -224,6 +224,20 @@
 			]
 		},
 		{
+			"group": "Barkley Shut Up and Jam 2",
+			"titles": [
+				{"searchTerm": "Barkley Shut Up and Jam 2"},
+				{"searchTerm": "Hoops Shut Up and Jam 2"}
+			]
+		},
+		{
+			"group": "Barkley Shut Up and Jam!",
+			"titles": [
+				{"searchTerm": "Barkley Shut Up and Jam!"},
+				{"searchTerm": "Hoops Shut Up and Jam!"}
+			]
+		},
+		{
 			"group": "Batman - The Video Game",
 			"titles": [
 				{"searchTerm": "Batman"},

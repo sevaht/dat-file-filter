@@ -1,0 +1,6 @@
+# Vendored Retool clone lists (BSD-3): keep them byte-for-byte as upstream
+# ships them. The per-system *.json files use CRLF; update_clonelists.py copies
+# them verbatim and its patch anchors are CRLF-based. Disabling line-ending
+# normalization here stops any contributor's core.autocrlf or editor from
+# flipping the endings, which would diverge from upstream and break the patches.
+src/dat_file_filter/clonelists/** -text
