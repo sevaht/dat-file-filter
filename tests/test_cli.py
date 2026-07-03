@@ -143,6 +143,45 @@ def test_keep_list_file_overrides_releases_only(
     assert "* Cool Game (Demo) (USA)" in capsys.readouterr().out
 
 
+_EXCLUSIVE_DAT = """<?xml version="1.0"?>
+<datafile>
+  <header><name>Sample</name></header>
+  <game name="Solo Game (USA)">
+    <description>Solo Game (USA)</description>
+    <category>Games</category>
+  </game>
+  <game name="JP Only Game (Japan) (Ja)">
+    <description>JP Only Game (Japan) (Ja)</description>
+    <category>Games</category>
+  </game>
+</datafile>
+"""
+
+
+def test_keep_exclusives_preserves_a_no_english_game(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    path = tmp_path / "excl.dat"
+    path.write_text(_EXCLUSIVE_DAT, encoding="utf-8")
+    opts = [
+        "--color",
+        "never",
+        "--no-clone-lists",
+        "--releases-only",
+        "--best-english",
+        "--has-english",
+        "--list",
+    ]
+    # Without the flag, a game with no English at all is dropped entirely.
+    assert main([*opts, str(path)]) == 0
+    assert "- JP Only Game (Japan) (Ja)" in capsys.readouterr().out
+    # With the flag, its representative is kept (flagged ~, no English).
+    assert main([*opts, "--keep-exclusives", str(path)]) == 0
+    out = capsys.readouterr().out
+    assert "~ JP Only Game (Japan) (Ja)" in out
+    assert "+ Solo Game (USA)" in out
+
+
 def test_unmatched_keep_is_an_error(tmp_path: Path) -> None:
     with pytest.raises(SystemExit):
         main(

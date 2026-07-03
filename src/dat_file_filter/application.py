@@ -71,6 +71,15 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
     )
     selection.add_argument(
+        "--keep-exclusives",
+        action="store_true",
+        help=(
+            "Also keep a best representative of any game with no English at"
+            " all, so region/language exclusives (e.g. Japanese-only titles)"
+            " aren't dropped."
+        ),
+    )
+    selection.add_argument(
         "--keep",
         action="append",
         metavar="NAME",
@@ -260,6 +269,10 @@ def _select_stems(
             ]
         else:
             selected = game.versions
+        if not selected and args.keep_exclusives:
+            # The game has no English at all and would be dropped entirely;
+            # keep a best representative of each variant so the title survives.
+            selected = game.representative_entities()
         stems.update(metadata.stem for metadata in selected)
     return stems
 
